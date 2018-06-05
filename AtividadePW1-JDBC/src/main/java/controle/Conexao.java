@@ -34,5 +34,9 @@ public class Conexao {
             System.out.println("Erro na Conexao.");
         }
     }
-
+    
+    public Connection getConn() {
+        return conn;
+    }
+    
 }

@@ -74,6 +74,10 @@ public class Cliente {
     public File getImagem() {
         return imagem;
     }
+    
+    public String getImgPath(){
+        return imagem.getPath();
+    }
 
     public void setImagem(File imagem) {
         this.imagem = imagem;

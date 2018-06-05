@@ -1,0 +1,17 @@
+CREATE TABLE Cliente (
+	id int PRIMARY KEY,
+    imgPath varchar(100) NOT NULL,
+    
+    nome varchar(50),
+    documento varchar(1000),
+    saldo numeric(7,2),
+    ativo boolean
+);
+
+CREATE TABLE Pedido (
+	id int PRIMARY KEY,
+    cliente int REFERENCES Cliente(id),
+    
+    data date,
+    valor numeric(7,2)
+)
