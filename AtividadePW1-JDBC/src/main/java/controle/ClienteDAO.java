@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.sql.RowSet;
+import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.FilteredRowSet;
 import javax.sql.rowset.RowSetFactory;
 import javax.sql.rowset.RowSetProvider;
@@ -140,8 +141,36 @@ public class ClienteDAO implements InterfaceDAO<Cliente> {
         }
     }
     
+    public CachedRowSet listarCachedRowSet() throws SQLException {
+        RowSetFactory factory = RowSetProvider.newFactory();
+        CachedRowSet crs = factory.createCachedRowSet();
+                
+        crs.setUrl(conexao.getUrl());
+        crs.setUsername(conexao.getUser());
+        crs.setPassword(conexao.getPass());
+        
+        String sql = "SELECT * FROM Cliente";
+        crs.setCommand(sql);
+        crs.execute();
+        
+        while (crs.next()) {
+            int id = crs.getInt("Id");
+            String nome = crs.getString("Nome");
+            String documento = crs.getString("Documento");
+            float saldo = crs.getFloat("Saldo");
+            boolean ativo = crs.getBoolean("Ativo");
+            String imgPath = crs.getString("ImgPath");
+
+            Cliente cliente = new Cliente(id, nome, documento, saldo, ativo, imgPath);
+            System.out.println(cliente);
+        }      
+        
+        return crs;
+        
+    }
+    
     //Executando com FilteredRowSet
-    public RowSet listarFilteredRowSet(double saldoMin, double saldoMax) throws SQLException {
+    public FilteredRowSet listarFilteredRowSet(double saldoMin, double saldoMax) throws SQLException {
         RowSetFactory factory = RowSetProvider.newFactory();
         FilteredRowSet frs = factory.createFilteredRowSet();
         

@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.sql.RowSet;
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.JdbcRowSet;
 import javax.sql.rowset.RowSetFactory;
@@ -127,7 +128,7 @@ public class PedidoDAO implements InterfaceDAO<Pedido> {
     }
     
     //Executando com JdbcRowSet
-    public void listarJdbcRowSet() throws SQLException {
+    public JdbcRowSet listarJdbcRowSet() throws SQLException {
         RowSetFactory factory = RowSetProvider.newFactory();
         JdbcRowSet jrs = factory.createJdbcRowSet();       
                 
@@ -148,11 +149,13 @@ public class PedidoDAO implements InterfaceDAO<Pedido> {
             Pedido pedido = new Pedido(id, data, cliente, valor);
             System.out.println(pedido);
         }
+        
+        return jrs;
        
     }
     
     //Executando com CachedRowSet
-    public void listarCachedRowSet() throws SQLException {
+    public CachedRowSet listarCachedRowSet() throws SQLException {
         RowSetFactory factory = RowSetProvider.newFactory();
         CachedRowSet crs = factory.createCachedRowSet();
                 
@@ -173,7 +176,8 @@ public class PedidoDAO implements InterfaceDAO<Pedido> {
             Pedido pedido = new Pedido(id, data, cliente, valor);
             System.out.println(pedido);
         }
-       
+        
+        return crs;       
     }
 
 }
