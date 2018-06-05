@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.sql.RowSet;
 import javax.sql.rowset.FilteredRowSet;
 import javax.sql.rowset.RowSetFactory;
 import javax.sql.rowset.RowSetProvider;
@@ -29,7 +30,7 @@ public class ClienteDAO implements InterfaceDAO<Cliente> {
     
     @Override
     public void incluir(Cliente c) throws SQLException {
-        String sql = "INSERT INTO Cliente(ID, Nome, Documento, Saldo, Ativo, Imagem)"
+        String sql = "INSERT INTO Cliente(ID, Nome, Documento, Saldo, Ativo, ImgPath)"
                    + "Values(?,?,?,?,?,?)";
         
         try (PreparedStatement stat = connection.prepareStatement(sql)) {
@@ -48,7 +49,7 @@ public class ClienteDAO implements InterfaceDAO<Cliente> {
 
     @Override
     public void alterar(Cliente c, Cliente novo) throws SQLException {
-        String sql = "UPDATE Cliente SET Id = ?, Nome = ?, Documento = ?, Saldo = ?, Ativo = ?, Imagem = ? "
+        String sql = "UPDATE Cliente SET Id = ?, Nome = ?, Documento = ?, Saldo = ?, Ativo = ?, ImgPath = ? "
                    + "WHERE Id = ? ";
         
         try (PreparedStatement stat = connection.prepareStatement(sql)) {
@@ -67,7 +68,7 @@ public class ClienteDAO implements InterfaceDAO<Cliente> {
     }
     
     public void alterar(int id, Cliente novo) throws SQLException {
-        String sql = "UPDATE Cliente SET Id = ?, Nome = ?, Documento = ?, Saldo = ?, Ativo = ?, Imagem = ? "
+        String sql = "UPDATE Cliente SET Id = ?, Nome = ?, Documento = ?, Saldo = ?, Ativo = ?, ImgPath = ? "
                    + "WHERE Id = ? ";
         
         try (PreparedStatement stat = connection.prepareStatement(sql)) {
@@ -88,7 +89,7 @@ public class ClienteDAO implements InterfaceDAO<Cliente> {
     @Override
     public void deletar(Cliente c) throws SQLException {
         String sql = "DELETE FROM Cliente WHERE Id = ? and Nome = ? and Documento = ?"
-                   + "and Saldo = ? and Ativo = ? and Imagem = ? ";
+                   + "and Saldo = ? and Ativo = ? and ImgPath = ? ";
         
         try (PreparedStatement stat = connection.prepareStatement(sql)) {
             stat.setInt     (1, c.getId());
@@ -140,7 +141,7 @@ public class ClienteDAO implements InterfaceDAO<Cliente> {
     }
     
     //Executando com FilteredRowSet
-    public void listarFilteredRowSet(double saldoMin, double saldoMax) throws SQLException {
+    public RowSet listarFilteredRowSet(double saldoMin, double saldoMax) throws SQLException {
         RowSetFactory factory = RowSetProvider.newFactory();
         FilteredRowSet frs = factory.createFilteredRowSet();
         
@@ -165,5 +166,7 @@ public class ClienteDAO implements InterfaceDAO<Cliente> {
             Cliente cliente = new Cliente(id, nome, documento, saldo, ativo, imgPath);
             System.out.println(cliente);
         }
-    }    
+        
+        return frs;
+    }   
 }
