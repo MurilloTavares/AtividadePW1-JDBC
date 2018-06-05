@@ -12,7 +12,7 @@ public class Conexao {
     Connection conn;
 
     public Conexao() {
-        url = "jdbc:postgresql://localhost:5432/atividadepw1-jdbc";
+        url = "jdbc:postgresql://localhost:5432/AtividadePW1-JDBC";
         user = "postgres";
         pass = "1234";
 
@@ -33,6 +33,18 @@ public class Conexao {
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Erro na Conexao.");
         }
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public String getPass() {
+        return pass;
     }
     
     public Connection getConn() {

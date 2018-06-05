@@ -1,11 +1,15 @@
 package controle;
 
+import Filters.SaldoFilter;
 import interfaces.InterfaceDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.sql.rowset.FilteredRowSet;
+import javax.sql.rowset.RowSetFactory;
+import javax.sql.rowset.RowSetProvider;
 import modelo.Cliente;
 
 public class ClienteDAO implements InterfaceDAO<Cliente> {
@@ -135,4 +139,31 @@ public class ClienteDAO implements InterfaceDAO<Cliente> {
         }
     }
     
+    //Executando com FilteredRowSet
+    public void listarFilteredRowSet(double saldoMin, double saldoMax) throws SQLException {
+        RowSetFactory factory = RowSetProvider.newFactory();
+        FilteredRowSet frs = factory.createFilteredRowSet();
+        
+        frs.setUrl(conexao.getUrl());
+        frs.setUsername(conexao.getUser());
+        frs.setPassword(conexao.getPass());
+        
+        String sql = "SELECT * FROM Cliente";
+        frs.setCommand(sql);
+        frs.execute();
+        
+        frs.setFilter(new SaldoFilter(saldoMin, saldoMax));
+        
+        while (frs.next()) {
+            int id = frs.getInt("Id");
+            String nome = frs.getString("Nome");
+            String documento = frs.getString("Documento");
+            float saldo = frs.getFloat("Saldo");
+            boolean ativo = frs.getBoolean("Ativo");
+            String imgPath = frs.getString("ImgPath");
+
+            Cliente cliente = new Cliente(id, nome, documento, saldo, ativo, imgPath);
+            System.out.println(cliente);
+        }
+    }    
 }

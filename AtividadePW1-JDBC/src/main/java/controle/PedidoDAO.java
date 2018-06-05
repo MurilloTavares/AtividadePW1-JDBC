@@ -7,6 +7,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.JdbcRowSet;
+import javax.sql.rowset.RowSetFactory;
+import javax.sql.rowset.RowSetProvider;
 import modelo.Pedido;
 
 public class PedidoDAO implements InterfaceDAO<Pedido> {
@@ -120,6 +124,56 @@ public class PedidoDAO implements InterfaceDAO<Pedido> {
         } catch (SQLException ex) {
             throw new SQLException(ex);
         }
+    }
+    
+    //Executando com JdbcRowSet
+    public void listarJdbcRowSet() throws SQLException {
+        RowSetFactory factory = RowSetProvider.newFactory();
+        JdbcRowSet jrs = factory.createJdbcRowSet();       
+                
+        jrs.setUrl(conexao.getUrl());
+        jrs.setUsername(conexao.getUser());
+        jrs.setPassword(conexao.getPass());
+        
+        String sql = "SELECT * FROM Pedido";
+        jrs.setCommand(sql);
+        jrs.execute();
+        
+        while (jrs.next()) {
+            int id = jrs.getInt("Id");
+            Date data = jrs.getDate("Data");
+            int cliente = jrs.getInt("Cliente");
+            float valor = jrs.getFloat("Valor");
+
+            Pedido pedido = new Pedido(id, data, cliente, valor);
+            System.out.println(pedido);
+        }
+       
+    }
+    
+    //Executando com CachedRowSet
+    public void listarCachedRowSet() throws SQLException {
+        RowSetFactory factory = RowSetProvider.newFactory();
+        CachedRowSet crs = factory.createCachedRowSet();
+                
+        crs.setUrl(conexao.getUrl());
+        crs.setUsername(conexao.getUser());
+        crs.setPassword(conexao.getPass());
+        
+        String sql = "SELECT * FROM Pedido";
+        crs.setCommand(sql);
+        crs.execute();
+        
+        while (crs.next()) {
+            int id = crs.getInt("Id");
+            Date data = crs.getDate("Data");
+            int cliente = crs.getInt("Cliente");
+            float valor = crs.getFloat("Valor");
+
+            Pedido pedido = new Pedido(id, data, cliente, valor);
+            System.out.println(pedido);
+        }
+       
     }
 
 }
